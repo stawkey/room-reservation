@@ -1,4 +1,4 @@
-package org.openapitools;
+package io.github.stawkey.roomreservation;
 
 import com.fasterxml.jackson.databind.Module;
 import org.openapitools.jackson.nullable.JsonNullableModule;
@@ -22,7 +22,7 @@ public class OpenApiGeneratorApplication {
         SpringApplication.run(OpenApiGeneratorApplication.class, args);
     }
 
-    @Bean(name = "org.openapitools.OpenApiGeneratorApplication.jsonNullableModule")
+    @Bean(name = "io.github.stawkey.roomreservation.OpenApiGeneratorApplication.jsonNullableModule")
     public Module jsonNullableModule() {
         return new JsonNullableModule();
     }
