@@ -1,0 +1,803 @@
+openapi: 3.0.4
+info:
+  description: |
+    A universal room reservation system designed for use in various institutions and organizations.
+
+    Possible applications:
+    - universities, schools – lecture halls, laboratories
+    - companies, hotels – conference rooms
+    - libraries, cultural centers – workshop rooms, event spaces
+    - gyms and fitness clubs – exercise rooms
+  title: RoomReservation
+  version: 0.0.1
+servers:
+- url: /api
+tags:
+- description: "Endpoints related to creating, managing, and querying reservations"
+  name: reservations
+- description: Endpoints for room management and retrieval
+  name: rooms
+paths:
+  /rooms/{room_id}/reservations:
+    get:
+      description: |
+        Returns a list of reservations for the specified room.
+        Supports optional filtering by date range.
+      parameters:
+      - description: ID of the room to reserve
+        explode: false
+        in: path
+        name: room_id
+        required: true
+        schema:
+          type: integer
+        style: simple
+      - description: |
+          Filter for reservations starting after this datetime (inclusive, ISO 8601). If not provided, defaults to one month before the current date.
+        explode: true
+        in: query
+        name: start
+        required: false
+        schema:
+          format: date-time
+          type: string
+        style: form
+      - description: |
+          Filter for reservations ending before this datetime (inclusive, ISO 8601). If not provided, defaults to one month after the current date.
+        explode: true
+        in: query
+        name: end
+        required: false
+        schema:
+          format: date-time
+          type: string
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Page'
+          description: List of reservations for the room
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: Requested resource was not found.
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: Unexpected server error.
+      summary: List reservations for a specific room
+      tags:
+      - reservations
+      x-accepts:
+      - application/json
+      x-tags:
+      - tag: reservations
+    post:
+      description: |
+        Reserves the specified room for the requested time span.
+
+        Returns **409 Conflict** if the time range overlaps an existing reservation.
+      parameters:
+      - description: ID of the room to reserve
+        explode: false
+        in: path
+        name: room_id
+        required: true
+        schema:
+          type: integer
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Reservation'
+        required: true
+      responses:
+        "201":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Reservation'
+          description: Reservation created successfully
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: Invalid input.
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: Requested resource was not found.
+        "409":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: Reservation conflicts with an existing booking.
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: Unexpected server error.
+      summary: Create a reservation
+      tags:
+      - reservations
+      x-content-type: application/json
+      x-accepts:
+      - application/json
+      x-tags:
+      - tag: reservations
+  /reservations:
+    get:
+      description: "Returns a paginated collection of reservations with optional filters\
+        \ for date range, room ID and sorting."
+      operationId: listReservation
+      parameters:
+      - description: "Filter reservations starting from this datetime (inclusive,\
+          \ ISO 8601 format)"
+        explode: true
+        in: query
+        name: start
+        required: false
+        schema:
+          format: date-time
+          type: string
+        style: form
+      - description: "Filter reservations ending at this datetime (inclusive, ISO\
+          \ 8601 format)"
+        explode: true
+        in: query
+        name: end
+        required: false
+        schema:
+          format: date-time
+          type: string
+        style: form
+      - description: Filter reservations by one or multiple room IDs
+        explode: true
+        in: query
+        name: room_id
+        required: false
+        schema:
+          items:
+            type: integer
+          type: array
+        style: form
+      - description: "Sort results by a specific field (e.g., `date`, `createdAt`,\
+          \ `roomName`)"
+        explode: true
+        in: query
+        name: sort
+        required: false
+        schema:
+          example: date
+          type: string
+        style: form
+      - description: Sort direction; ascending (`asc`) or descending (`desc`)
+        explode: true
+        in: query
+        name: order
+        required: false
+        schema:
+          default: asc
+          enum:
+          - asc
+          - desc
+          type: string
+        style: form
+      - description: Page number for pagination (starting from 1)
+        explode: true
+        in: query
+        name: page
+        required: false
+        schema:
+          default: 1
+          minimum: 1
+          type: integer
+        style: form
+      - description: Number of results per page (max 100)
+        explode: true
+        in: query
+        name: page_size
+        required: false
+        schema:
+          default: 20
+          maximum: 100
+          minimum: 1
+          type: integer
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Page'
+          description: Paginated list of reservations
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: Unexpected server error.
+      summary: List reservations
+      tags:
+      - reservations
+      x-accepts:
+      - application/json
+      x-tags:
+      - tag: reservations
+  /reservations/{id}:
+    delete:
+      description: "Cancel an existing reservation, releasing the booked room and\
+        \ time."
+      operationId: cancelReservation
+      parameters:
+      - description: ID of the reservation
+        explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: integer
+        style: simple
+      responses:
+        "204":
+          description: Reservation cancelled successfully
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: Invalid input.
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: Requested resource was not found.
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: Unexpected server error.
+      summary: Cancel reservation
+      tags:
+      - reservations
+      x-accepts:
+      - application/json
+      x-tags:
+      - tag: reservations
+    get:
+      description: Retrieve full details of a reservation by its ID.
+      operationId: getReservation
+      parameters:
+      - description: ID of the reservation
+        explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: integer
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Reservation'
+          description: Reservation data retrieved successfully
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: Invalid input.
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: Requested resource was not found.
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: Unexpected server error.
+      summary: Retrieve reservation details
+      tags:
+      - reservations
+      x-accepts:
+      - application/json
+      x-tags:
+      - tag: reservations
+  /rooms:
+    get:
+      description: Retrieve a paginated list of available rooms.
+      operationId: listRooms
+      parameters:
+      - description: Page number for pagination (starting from 1)
+        explode: true
+        in: query
+        name: page
+        required: false
+        schema:
+          default: 1
+          minimum: 1
+          type: integer
+        style: form
+      - description: Number of rooms per page (max 100)
+        explode: true
+        in: query
+        name: page_size
+        required: false
+        schema:
+          default: 20
+          maximum: 100
+          minimum: 1
+          type: integer
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/listRooms_200_response'
+          description: Paginated list of rooms
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: Unexpected server error.
+      summary: List rooms
+      tags:
+      - rooms
+      x-accepts:
+      - application/json
+      x-tags:
+      - tag: rooms
+    post:
+      description: Creates a new room.
+      operationId: createRoom
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/createRoom_request'
+        required: true
+      responses:
+        "201":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Room'
+          description: Room created successfully
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: Invalid input.
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: Unexpected server error.
+      summary: Create a new room
+      tags:
+      - rooms
+      x-content-type: application/json
+      x-accepts:
+      - application/json
+      x-tags:
+      - tag: rooms
+  /rooms/{room_id}:
+    delete:
+      description: Delete the room.
+      operationId: deleteRoom
+      parameters:
+      - description: ID of the room to retrieve or modify
+        explode: false
+        in: path
+        name: room_id
+        required: true
+        schema:
+          type: integer
+        style: simple
+      responses:
+        "204":
+          description: Room deleted successfully
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: Invalid input.
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: Requested resource was not found.
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: Unexpected server error.
+      summary: Delete room
+      tags:
+      - rooms
+      x-accepts:
+      - application/json
+      x-tags:
+      - tag: rooms
+    get:
+      description: Retrieve detailed information about a room.
+      operationId: getRoom
+      parameters:
+      - description: ID of the room to retrieve or modify
+        explode: false
+        in: path
+        name: room_id
+        required: true
+        schema:
+          type: integer
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Room'
+          description: Room details
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: Invalid input.
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: Requested resource was not found.
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: Unexpected server error.
+      summary: Get room details
+      tags:
+      - rooms
+      x-accepts:
+      - application/json
+      x-tags:
+      - tag: rooms
+    put:
+      description: Updates information for a room.
+      operationId: updateRoom
+      parameters:
+      - description: ID of the room to retrieve or modify
+        explode: false
+        in: path
+        name: room_id
+        required: true
+        schema:
+          type: integer
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/updateRoom_request'
+        description: Room data to update
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Room'
+          description: Room updated successfully
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: Invalid input.
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: Requested resource was not found.
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: Unexpected server error.
+      summary: Update room
+      tags:
+      - rooms
+      x-content-type: application/json
+      x-accepts:
+      - application/json
+      x-tags:
+      - tag: rooms
+components:
+  responses:
+    BadRequest:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+      description: Invalid input.
+    NotFound:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+      description: Requested resource was not found.
+    Conflict:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+      description: Reservation conflicts with an existing booking.
+    DefaultError:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+      description: Unexpected server error.
+  schemas:
+    AuditFields:
+      description: Audit fields containing timestamps of creation and last update.
+      properties:
+        createdAt:
+          description: Timestamp when the record was created (ISO 8601 format).
+          example: 2025-05-24T12:34:56Z
+          format: date-time
+          type: string
+        updatedAt:
+          description: Timestamp of the last modification of the record.
+          example: 2025-05-25T08:00:00Z
+          format: date-time
+          type: string
+      type: object
+    ReservationStatus:
+      description: Current status of a reservation.
+      enum:
+      - active
+      - cancelled
+      - completed
+      - hidden
+      type: string
+    Reservation:
+      allOf:
+      - $ref: '#/components/schemas/AuditFields'
+      - description: Details of a room reservation.
+        properties:
+          id:
+            description: Unique identifier of the reservation.
+            example: 1234
+            type: integer
+          roomId:
+            description: ID of the reserved room.
+            example: 321
+            type: integer
+          start:
+            description: Reservation start date and time.
+            format: date-time
+            type: string
+          end:
+            description: Reservation end date and time.
+            format: date-time
+            type: string
+          status:
+            allOf:
+            - $ref: '#/components/schemas/ReservationStatus'
+            description: Current status of the reservation.
+            example: active
+          description:
+            description: Optional description or purpose of the reservation.
+            type: string
+        required:
+        - end
+        - roomId
+        - start
+        - status
+        type: object
+      example:
+        createdAt: 2025-05-24T12:34:56Z
+        start: 2000-01-23T04:56:07.000+00:00
+        description: description
+        end: 2000-01-23T04:56:07.000+00:00
+        id: 1234
+        roomId: 321
+        updatedAt: 2025-05-25T08:00:00Z
+        status: active
+      type: object
+    Page:
+      description: Paginated list wrapper containing reservation items and pagination
+        metadata.
+      example:
+        total: 120
+        totalPages: 6
+        pageSize: 20
+        page: 1
+        items:
+        - createdAt: 2025-05-24T12:34:56Z
+          start: 2000-01-23T04:56:07.000+00:00
+          description: description
+          end: 2000-01-23T04:56:07.000+00:00
+          id: 1234
+          roomId: 321
+          updatedAt: 2025-05-25T08:00:00Z
+          status: active
+        - createdAt: 2025-05-24T12:34:56Z
+          start: 2000-01-23T04:56:07.000+00:00
+          description: description
+          end: 2000-01-23T04:56:07.000+00:00
+          id: 1234
+          roomId: 321
+          updatedAt: 2025-05-25T08:00:00Z
+          status: active
+      properties:
+        items:
+          description: List of items on the current page.
+          items:
+            $ref: '#/components/schemas/Reservation'
+          type: array
+        page:
+          description: Current page number.
+          example: 1
+          type: integer
+        pageSize:
+          description: Number of items per page.
+          example: 20
+          type: integer
+        total:
+          description: Total number of items available.
+          example: 120
+          type: integer
+        totalPages:
+          description: Total number of pages.
+          example: 6
+          type: integer
+      type: object
+    Room:
+      allOf:
+      - $ref: '#/components/schemas/AuditFields'
+      - description: Details about a room available for reservation.
+        properties:
+          id:
+            description: Unique identifier of the room.
+            example: 321
+            type: integer
+          name:
+            description: Name of the room.
+            example: Conference Room A
+            type: string
+          capacity:
+            description: Maximum capacity of the room.
+            example: 20
+            type: integer
+          description:
+            description: Additional information or features of the room.
+            example: Room equipped with projector and whiteboard.
+            type: string
+        required:
+        - capacity
+        - name
+        type: object
+      example:
+        createdAt: 2025-05-24T12:34:56Z
+        name: Conference Room A
+        description: Room equipped with projector and whiteboard.
+        id: 321
+        updatedAt: 2025-05-25T08:00:00Z
+        capacity: 20
+      type: object
+    Error:
+      description: Error response format.
+      example:
+        code: BadRequest
+        message: Invalid input provided.
+      properties:
+        code:
+          description: Error code identifier.
+          example: BadRequest
+          type: string
+        message:
+          description: Detailed error message.
+          example: Invalid input provided.
+          type: string
+      type: object
+    listRooms_200_response:
+      example:
+        total: 150
+        totalPages: 8
+        pageSize: 20
+        page: 1
+        items:
+        - createdAt: 2025-05-24T12:34:56Z
+          name: Conference Room A
+          description: Room equipped with projector and whiteboard.
+          id: 321
+          updatedAt: 2025-05-25T08:00:00Z
+          capacity: 20
+        - createdAt: 2025-05-24T12:34:56Z
+          name: Conference Room A
+          description: Room equipped with projector and whiteboard.
+          id: 321
+          updatedAt: 2025-05-25T08:00:00Z
+          capacity: 20
+      properties:
+        items:
+          items:
+            $ref: '#/components/schemas/Room'
+          type: array
+        page:
+          example: 1
+          type: integer
+        pageSize:
+          example: 20
+          type: integer
+        total:
+          example: 150
+          type: integer
+        totalPages:
+          example: 8
+          type: integer
+      type: object
+    createRoom_request:
+      properties:
+        name:
+          description: Name or title identifying the room
+          example: Conference Room B
+          type: string
+        capacity:
+          description: Maximum number of people the room can accommodate
+          example: 25
+          type: integer
+        description:
+          description: Additional details about the room’s facilities and features
+          example: Room with video conferencing equipment.
+          type: string
+      required:
+      - capacity
+      - name
+      type: object
+    updateRoom_request:
+      properties:
+        name:
+          description: Updated name of the room
+          example: Conference Room B
+          type: string
+        capacity:
+          description: Updated capacity of the room
+          example: 30
+          type: integer
+        description:
+          description: Updated descriptive text about the room
+          example: Conference room with a projector.
+          type: string
+      type: object
