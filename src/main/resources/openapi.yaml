@@ -36,7 +36,7 @@ paths:
           Filter for reservations starting after this datetime (inclusive, ISO 8601). If not provided, defaults to one month before the current date.
         explode: true
         in: query
-        name: start
+        name: startDate
         required: false
         schema:
           format: date-time
@@ -46,7 +46,7 @@ paths:
           Filter for reservations ending before this datetime (inclusive, ISO 8601). If not provided, defaults to one month after the current date.
         explode: true
         in: query
-        name: end
+        name: endDate
         required: false
         schema:
           format: date-time
@@ -147,7 +147,7 @@ paths:
           \ ISO 8601 format)"
         explode: true
         in: query
-        name: start
+        name: startDate
         required: false
         schema:
           format: date-time
@@ -157,7 +157,7 @@ paths:
           \ 8601 format)"
         explode: true
         in: query
-        name: end
+        name: endDate
         required: false
         schema:
           format: date-time
@@ -603,11 +603,11 @@ components:
             description: ID of the reserved room.
             example: 321
             type: integer
-          start:
+          startDate:
             description: Reservation start date and time.
             format: date-time
             type: string
-          end:
+          endDate:
             description: Reservation end date and time.
             format: date-time
             type: string
@@ -620,16 +620,16 @@ components:
             description: Optional description or purpose of the reservation.
             type: string
         required:
-        - end
+        - endDate
         - roomId
-        - start
+        - startDate
         - status
         type: object
       example:
         createdAt: 2025-05-24T12:34:56Z
-        start: 2000-01-23T04:56:07.000+00:00
+        startDate: 2000-01-23T04:56:07.000+00:00
         description: description
-        end: 2000-01-23T04:56:07.000+00:00
+        endDate: 2000-01-23T04:56:07.000+00:00
         id: 1234
         roomId: 321
         updatedAt: 2025-05-25T08:00:00Z
@@ -645,17 +645,17 @@ components:
         page: 1
         items:
         - createdAt: 2025-05-24T12:34:56Z
-          start: 2000-01-23T04:56:07.000+00:00
+          startDate: 2000-01-23T04:56:07.000+00:00
           description: description
-          end: 2000-01-23T04:56:07.000+00:00
+          endDate: 2000-01-23T04:56:07.000+00:00
           id: 1234
           roomId: 321
           updatedAt: 2025-05-25T08:00:00Z
           status: active
         - createdAt: 2025-05-24T12:34:56Z
-          start: 2000-01-23T04:56:07.000+00:00
+          startDate: 2000-01-23T04:56:07.000+00:00
           description: description
-          end: 2000-01-23T04:56:07.000+00:00
+          endDate: 2000-01-23T04:56:07.000+00:00
           id: 1234
           roomId: 321
           updatedAt: 2025-05-25T08:00:00Z

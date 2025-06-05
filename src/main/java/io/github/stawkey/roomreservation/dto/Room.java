@@ -26,7 +26,7 @@ public class Room {
   @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
   private @Nullable OffsetDateTime updatedAt;
 
-  private @Nullable Integer id;
+  private @Nullable Long id;
 
   private String name;
 
@@ -86,7 +86,7 @@ public class Room {
     this.updatedAt = updatedAt;
   }
 
-  public Room id(Integer id) {
+  public Room id(Long id) {
     this.id = id;
     return this;
   }
@@ -98,11 +98,11 @@ public class Room {
   
   @Schema(name = "id", example = "321", description = "Unique identifier of the room.", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("id")
-  public Integer getId() {
+  public Long getId() {
     return id;
   }
 
-  public void setId(Integer id) {
+  public void setId(Long id) {
     this.id = id;
   }
 

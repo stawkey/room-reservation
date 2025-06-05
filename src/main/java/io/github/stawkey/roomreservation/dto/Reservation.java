@@ -26,15 +26,15 @@ public class Reservation {
   @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
   private @Nullable OffsetDateTime updatedAt;
 
-  private @Nullable Integer id;
+  private @Nullable Long id;
 
   private Integer roomId;
 
   @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
-  private OffsetDateTime start;
+  private OffsetDateTime startDate;
 
   @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
-  private OffsetDateTime end;
+  private OffsetDateTime endDate;
 
   private ReservationStatus status;
 
@@ -47,10 +47,10 @@ public class Reservation {
   /**
    * Constructor with only required parameters
    */
-  public Reservation(Integer roomId, OffsetDateTime start, OffsetDateTime end, ReservationStatus status) {
+  public Reservation(Integer roomId, OffsetDateTime startDate, OffsetDateTime endDate, ReservationStatus status) {
     this.roomId = roomId;
-    this.start = start;
-    this.end = end;
+    this.startDate = startDate;
+    this.endDate = endDate;
     this.status = status;
   }
 
@@ -94,7 +94,7 @@ public class Reservation {
     this.updatedAt = updatedAt;
   }
 
-  public Reservation id(Integer id) {
+  public Reservation id(Long id) {
     this.id = id;
     return this;
   }
@@ -106,11 +106,11 @@ public class Reservation {
   
   @Schema(name = "id", example = "1234", description = "Unique identifier of the reservation.", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("id")
-  public Integer getId() {
+  public Long getId() {
     return id;
   }
 
-  public void setId(Integer id) {
+  public void setId(Long id) {
     this.id = id;
   }
 
@@ -135,7 +135,7 @@ public class Reservation {
   }
 
   public Reservation start(OffsetDateTime start) {
-    this.start = start;
+    this.startDate = start;
     return this;
   }
 
@@ -146,16 +146,16 @@ public class Reservation {
   @NotNull @Valid 
   @Schema(name = "start", description = "Reservation start date and time.", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("start")
-  public OffsetDateTime getStart() {
-    return start;
+  public OffsetDateTime getStartDate() {
+    return startDate;
   }
 
-  public void setStart(OffsetDateTime start) {
-    this.start = start;
+  public void setStartDate(OffsetDateTime startDate) {
+    this.startDate = startDate;
   }
 
   public Reservation end(OffsetDateTime end) {
-    this.end = end;
+    this.endDate = end;
     return this;
   }
 
@@ -166,12 +166,12 @@ public class Reservation {
   @NotNull @Valid 
   @Schema(name = "end", description = "Reservation end date and time.", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("end")
-  public OffsetDateTime getEnd() {
-    return end;
+  public OffsetDateTime getEndDate() {
+    return endDate;
   }
 
-  public void setEnd(OffsetDateTime end) {
-    this.end = end;
+  public void setEndDate(OffsetDateTime endDate) {
+    this.endDate = endDate;
   }
 
   public Reservation status(ReservationStatus status) {
@@ -227,15 +227,15 @@ public class Reservation {
         Objects.equals(this.updatedAt, reservation.updatedAt) &&
         Objects.equals(this.id, reservation.id) &&
         Objects.equals(this.roomId, reservation.roomId) &&
-        Objects.equals(this.start, reservation.start) &&
-        Objects.equals(this.end, reservation.end) &&
+        Objects.equals(this.startDate, reservation.startDate) &&
+        Objects.equals(this.endDate, reservation.endDate) &&
         Objects.equals(this.status, reservation.status) &&
         Objects.equals(this.description, reservation.description);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(createdAt, updatedAt, id, roomId, start, end, status, description);
+    return Objects.hash(createdAt, updatedAt, id, roomId, startDate, endDate, status, description);
   }
 
   @Override
@@ -246,8 +246,8 @@ public class Reservation {
     sb.append("    updatedAt: ").append(toIndentedString(updatedAt)).append("\n");
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
     sb.append("    roomId: ").append(toIndentedString(roomId)).append("\n");
-    sb.append("    start: ").append(toIndentedString(start)).append("\n");
-    sb.append("    end: ").append(toIndentedString(end)).append("\n");
+    sb.append("    start: ").append(toIndentedString(startDate)).append("\n");
+    sb.append("    end: ").append(toIndentedString(endDate)).append("\n");
     sb.append("    status: ").append(toIndentedString(status)).append("\n");
     sb.append("    description: ").append(toIndentedString(description)).append("\n");
     sb.append("}");
