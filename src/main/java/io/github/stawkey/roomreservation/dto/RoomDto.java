@@ -18,7 +18,7 @@ import jakarta.annotation.Generated;
  */
 
 @Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-05-30T20:04:03.976488063+02:00[Europe/Warsaw]", comments = "Generator version: 7.12.0")
-public class Room {
+public class RoomDto {
 
   @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
   private @Nullable OffsetDateTime createdAt;
@@ -34,19 +34,19 @@ public class Room {
 
   private @Nullable String description;
 
-  public Room() {
+  public RoomDto() {
     super();
   }
 
   /**
    * Constructor with only required parameters
    */
-  public Room(String name, Integer capacity) {
+  public RoomDto(String name, Integer capacity) {
     this.name = name;
     this.capacity = capacity;
   }
 
-  public Room createdAt(OffsetDateTime createdAt) {
+  public RoomDto createdAt(OffsetDateTime createdAt) {
     this.createdAt = createdAt;
     return this;
   }
@@ -66,7 +66,7 @@ public class Room {
     this.createdAt = createdAt;
   }
 
-  public Room updatedAt(OffsetDateTime updatedAt) {
+  public RoomDto updatedAt(OffsetDateTime updatedAt) {
     this.updatedAt = updatedAt;
     return this;
   }
@@ -86,7 +86,7 @@ public class Room {
     this.updatedAt = updatedAt;
   }
 
-  public Room id(Long id) {
+  public RoomDto id(Long id) {
     this.id = id;
     return this;
   }
@@ -106,7 +106,7 @@ public class Room {
     this.id = id;
   }
 
-  public Room name(String name) {
+  public RoomDto name(String name) {
     this.name = name;
     return this;
   }
@@ -126,7 +126,7 @@ public class Room {
     this.name = name;
   }
 
-  public Room capacity(Integer capacity) {
+  public RoomDto capacity(Integer capacity) {
     this.capacity = capacity;
     return this;
   }
@@ -146,7 +146,7 @@ public class Room {
     this.capacity = capacity;
   }
 
-  public Room description(String description) {
+  public RoomDto description(String description) {
     this.description = description;
     return this;
   }
@@ -174,13 +174,13 @@ public class Room {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    Room room = (Room) o;
-    return Objects.equals(this.createdAt, room.createdAt) &&
-        Objects.equals(this.updatedAt, room.updatedAt) &&
-        Objects.equals(this.id, room.id) &&
-        Objects.equals(this.name, room.name) &&
-        Objects.equals(this.capacity, room.capacity) &&
-        Objects.equals(this.description, room.description);
+    RoomDto roomDto = (RoomDto) o;
+    return Objects.equals(this.createdAt, roomDto.createdAt) &&
+        Objects.equals(this.updatedAt, roomDto.updatedAt) &&
+        Objects.equals(this.id, roomDto.id) &&
+        Objects.equals(this.name, roomDto.name) &&
+        Objects.equals(this.capacity, roomDto.capacity) &&
+        Objects.equals(this.description, roomDto.description);
   }
 
   @Override

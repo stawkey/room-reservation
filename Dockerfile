@@ -4,6 +4,6 @@
 #RUN ./mvnw clean package -DskipTests
 #FROM eclipse-temurin:21-jre
 #WORKDIR /app
-#COPY --from=builder /app/target/*.jar room-reservation.jar
+#COPY --from=builder /app/target/*.jar roomDto-reservation.jar
 #EXPOSE 8080
-#ENTRYPOINT ["java", "-jar", "room-reservation.jar"]
+#ENTRYPOINT ["java", "-jar", "roomDto-reservation.jar"]

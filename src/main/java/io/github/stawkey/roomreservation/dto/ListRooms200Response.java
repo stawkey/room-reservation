@@ -22,7 +22,7 @@ import jakarta.annotation.Generated;
 public class ListRooms200Response {
 
   @Valid
-  private List<@Valid Room> items = new ArrayList<>();
+  private List<@Valid RoomDto> items = new ArrayList<>();
 
   private @Nullable Integer page;
 
@@ -32,12 +32,12 @@ public class ListRooms200Response {
 
   private @Nullable Integer totalPages;
 
-  public ListRooms200Response items(List<@Valid Room> items) {
+  public ListRooms200Response items(List<@Valid RoomDto> items) {
     this.items = items;
     return this;
   }
 
-  public ListRooms200Response addItemsItem(Room itemsItem) {
+  public ListRooms200Response addItemsItem(RoomDto itemsItem) {
     if (this.items == null) {
       this.items = new ArrayList<>();
     }
@@ -52,11 +52,11 @@ public class ListRooms200Response {
   @Valid 
   @Schema(name = "items", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("items")
-  public List<@Valid Room> getItems() {
+  public List<@Valid RoomDto> getItems() {
     return items;
   }
 
-  public void setItems(List<@Valid Room> items) {
+  public void setItems(List<@Valid RoomDto> items) {
     this.items = items;
   }
 

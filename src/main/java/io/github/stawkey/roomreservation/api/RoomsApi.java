@@ -5,15 +5,13 @@
  */
 package io.github.stawkey.roomreservation.api;
 
-import io.github.stawkey.roomreservation.dto.CreateRoomRequest;
-import org.springframework.format.annotation.DateTimeFormat;
+import io.github.stawkey.roomreservation.dto.*;
 import io.github.stawkey.roomreservation.dto.Error;
-import io.github.stawkey.roomreservation.dto.ListRooms200Response;
+import org.springframework.format.annotation.DateTimeFormat;
+
 import java.time.OffsetDateTime;
-import io.github.stawkey.roomreservation.dto.Page;
-import io.github.stawkey.roomreservation.dto.Reservation;
-import io.github.stawkey.roomreservation.dto.Room;
-import io.github.stawkey.roomreservation.dto.UpdateRoomRequest;
+
+import io.github.stawkey.roomreservation.dto.RoomDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -59,7 +57,7 @@ public interface RoomsApi {
         tags = { "rooms" },
         responses = {
             @ApiResponse(responseCode = "201", description = "Room created successfully", content = {
-                @Content(mediaType = "application/json", schema = @Schema(implementation = Room.class))
+                @Content(mediaType = "application/json", schema = @Schema(implementation = RoomDto.class))
             }),
             @ApiResponse(responseCode = "400", description = "Invalid input.", content = {
                 @Content(mediaType = "application/json", schema = @Schema(implementation = Error.class))
@@ -76,7 +74,7 @@ public interface RoomsApi {
         consumes = { "application/json" }
     )
     
-    default ResponseEntity<Room> createRoom(
+    default ResponseEntity<RoomDto> createRoom(
         @Parameter(name = "CreateRoomRequest", description = "", required = true) @Valid @RequestBody CreateRoomRequest createRoomRequest
     ) {
         getRequest().ifPresent(request -> {
@@ -181,7 +179,7 @@ public interface RoomsApi {
         tags = { "rooms" },
         responses = {
             @ApiResponse(responseCode = "200", description = "Room details", content = {
-                @Content(mediaType = "application/json", schema = @Schema(implementation = Room.class))
+                @Content(mediaType = "application/json", schema = @Schema(implementation = RoomDto.class))
             }),
             @ApiResponse(responseCode = "400", description = "Invalid input.", content = {
                 @Content(mediaType = "application/json", schema = @Schema(implementation = Error.class))
@@ -200,7 +198,7 @@ public interface RoomsApi {
         produces = { "application/json" }
     )
     
-    default ResponseEntity<Room> getRoom(
+    default ResponseEntity<RoomDto> getRoom(
         @Parameter(name = "room_id", description = "ID of the room to retrieve or modify", required = true, in = ParameterIn.PATH) @PathVariable("room_id") Integer roomId
     ) {
         getRequest().ifPresent(request -> {
@@ -445,7 +443,7 @@ public interface RoomsApi {
         tags = { "rooms" },
         responses = {
             @ApiResponse(responseCode = "200", description = "Room updated successfully", content = {
-                @Content(mediaType = "application/json", schema = @Schema(implementation = Room.class))
+                @Content(mediaType = "application/json", schema = @Schema(implementation = RoomDto.class))
             }),
             @ApiResponse(responseCode = "400", description = "Invalid input.", content = {
                 @Content(mediaType = "application/json", schema = @Schema(implementation = Error.class))
@@ -465,7 +463,7 @@ public interface RoomsApi {
         consumes = { "application/json" }
     )
     
-    default ResponseEntity<Room> updateRoom(
+    default ResponseEntity<RoomDto> updateRoom(
         @Parameter(name = "room_id", description = "ID of the room to retrieve or modify", required = true, in = ParameterIn.PATH) @PathVariable("room_id") Integer roomId,
         @Parameter(name = "UpdateRoomRequest", description = "Room data to update", required = true) @Valid @RequestBody UpdateRoomRequest updateRoomRequest
     ) {
