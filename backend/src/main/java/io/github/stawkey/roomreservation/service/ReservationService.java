@@ -1,5 +1,6 @@
 package io.github.stawkey.roomreservation.service;
 
+import io.github.stawkey.roomreservation.dto.ReservationStatus;
 import io.github.stawkey.roomreservation.entity.Reservation;
 import io.github.stawkey.roomreservation.entity.Room;
 import io.github.stawkey.roomreservation.repository.ReservationRepository;
@@ -180,12 +181,15 @@ public class ReservationService {
     public Result<Boolean> cancelReservation(Long id) {
         log.info("Canceling reservation with ID: {}", id);
         try {
-            if (!reservationRepository.existsById(id)) {
+            Optional<Reservation> reservationOpt = reservationRepository.findById(id);
+            if (reservationOpt.isEmpty()) {
                 log.warn("Reservation not found with ID: {} for cancellation", id);
                 return Result.success(false);
             }
-            reservationRepository.deleteById(id);
-            log.info("Reservation successfully canceled with ID: {}", id);
+            Reservation reservation = reservationOpt.get();
+            reservation.setStatus(ReservationStatus.CANCELLED);
+            reservationRepository.save(reservation);
+            log.info("Reservation status set to CANCELLED for ID: {}", id);
             return Result.success(true);
         } catch (Exception e) {
             log.error("Failed to cancel reservation with ID: {}", id, e);

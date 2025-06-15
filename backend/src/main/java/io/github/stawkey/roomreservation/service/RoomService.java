@@ -53,9 +53,7 @@ public class RoomService {
             log.error("Failed to create room: {}", room, e);
             return Result.failure("Failed to create room: " + e.getMessage());
         }
-    }
-
-    @Transactional
+    }    @Transactional
     public Result<Room> updateRoom(Long id, Room updatedRoom) {
         log.info("Updating room with ID: {}", id);
         log.debug("Update details: {}", updatedRoom);
@@ -71,6 +69,12 @@ public class RoomService {
             roomToUpdate.setName(updatedRoom.getName());
             roomToUpdate.setCapacity(updatedRoom.getCapacity());
             roomToUpdate.setDescription(updatedRoom.getDescription());
+            
+            // Update tags - replace existing tags with new ones
+            if (updatedRoom.getTags() != null) {
+                log.debug("Updating room tags. New tags count: {}", updatedRoom.getTags().size());
+                roomToUpdate.setTags(updatedRoom.getTags());
+            }
             
             Room savedRoom = roomRepository.save(roomToUpdate);
             log.info("Room updated successfully with ID: {}", savedRoom.getId());

@@ -1,6 +1,7 @@
 package io.github.stawkey.roomreservation.dto;
 
 import java.util.Objects;
+import java.util.List;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import org.springframework.lang.Nullable;
@@ -22,6 +23,8 @@ public class UpdateRoomRequest {
   private @Nullable Integer capacity;
 
   private @Nullable String description;
+
+  private @Nullable List<Long> tagIds;
 
   public UpdateRoomRequest name(String name) {
     this.name = name;
@@ -83,6 +86,25 @@ public class UpdateRoomRequest {
     this.description = description;
   }
 
+  public UpdateRoomRequest tagIds(List<Long> tagIds) {
+    this.tagIds = tagIds;
+    return this;
+  }
+
+  /**
+   * List of tag IDs to associate with the room
+   * @return tagIds
+   */
+  @Schema(name = "tagIds", description = "List of tag IDs to associate with the room", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("tagIds")
+  public List<Long> getTagIds() {
+    return tagIds;
+  }
+
+  public void setTagIds(List<Long> tagIds) {
+    this.tagIds = tagIds;
+  }
+
   @Override
   public boolean equals(Object o) {
     if (this == o) {
@@ -94,12 +116,13 @@ public class UpdateRoomRequest {
     UpdateRoomRequest updateRoomRequest = (UpdateRoomRequest) o;
     return Objects.equals(this.name, updateRoomRequest.name) &&
         Objects.equals(this.capacity, updateRoomRequest.capacity) &&
-        Objects.equals(this.description, updateRoomRequest.description);
+        Objects.equals(this.description, updateRoomRequest.description) &&
+        Objects.equals(this.tagIds, updateRoomRequest.tagIds);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(name, capacity, description);
+    return Objects.hash(name, capacity, description, tagIds);
   }
 
   @Override
@@ -109,6 +132,7 @@ public class UpdateRoomRequest {
     sb.append("    name: ").append(toIndentedString(name)).append("\n");
     sb.append("    capacity: ").append(toIndentedString(capacity)).append("\n");
     sb.append("    description: ").append(toIndentedString(description)).append("\n");
+    sb.append("    tagIds: ").append(toIndentedString(tagIds)).append("\n");
     sb.append("}");
     return sb.toString();
   }

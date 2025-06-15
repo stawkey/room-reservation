@@ -185,12 +185,22 @@ public class RoomsApiController implements RoomsApi {
             @RequestBody
             UpdateRoomRequest updateRoomRequest) {
         log.info("API request: Update room with ID: {}", roomId);
-        log.debug("Update data: name={}, capacity={}", updateRoomRequest.getName(), updateRoomRequest.getCapacity());
+        log.debug("Update data: name={}, capacity={}, tagIds={}", 
+                updateRoomRequest.getName(), updateRoomRequest.getCapacity(), updateRoomRequest.getTagIds());
         
         Room updatedRoom = new Room();
         updatedRoom.setName(updateRoomRequest.getName());
         updatedRoom.setCapacity(updateRoomRequest.getCapacity());
         updatedRoom.setDescription(updateRoomRequest.getDescription());
+
+        // Handle tags if provided
+        Set<Tag> tags = new HashSet<>();
+        if (updateRoomRequest.getTagIds() != null) {
+            log.debug("Fetching tags for room update: {}", updateRoomRequest.getTagIds());
+            tags.addAll(tagService.findAllById(updateRoomRequest.getTagIds()));
+            log.debug("Found {} tags out of {} requested", tags.size(), updateRoomRequest.getTagIds().size());
+        }
+        updatedRoom.setTags(tags);
 
         Result<Room> result = roomService.updateRoom(roomId, updatedRoom);
 
