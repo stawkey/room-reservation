@@ -7,11 +7,11 @@ package io.github.stawkey.roomreservation.api;
 
 import io.github.stawkey.roomreservation.dto.*;
 import io.github.stawkey.roomreservation.dto.Error;
+import io.swagger.v3.oas.annotations.media.ExampleObject;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.OffsetDateTime;
 
-import io.github.stawkey.roomreservation.dto.RoomDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -136,7 +136,8 @@ public interface RoomsApi {
     )
     
     default ResponseEntity<Void> deleteRoom(
-        @Parameter(name = "room_id", description = "ID of the room to retrieve or modify", required = true, in = ParameterIn.PATH) @PathVariable("room_id") Integer roomId
+        @Parameter(name = "room_id", description = "ID of the room to retrieve or modify", required = true, in =
+                ParameterIn.PATH) @PathVariable("room_id") Long roomId
     ) {
         getRequest().ifPresent(request -> {
             for (MediaType mediaType: MediaType.parseMediaTypes(request.getHeader("Accept"))) {
@@ -199,7 +200,8 @@ public interface RoomsApi {
     )
     
     default ResponseEntity<RoomDto> getRoom(
-        @Parameter(name = "room_id", description = "ID of the room to retrieve or modify", required = true, in = ParameterIn.PATH) @PathVariable("room_id") Integer roomId
+        @Parameter(name = "room_id", description = "ID of the room to retrieve or modify", required = true, in =
+                ParameterIn.PATH) @PathVariable("room_id") Long roomId
     ) {
         getRequest().ifPresent(request -> {
             for (MediaType mediaType: MediaType.parseMediaTypes(request.getHeader("Accept"))) {
@@ -287,14 +289,16 @@ public interface RoomsApi {
      * Returns a list of reservations for the specified room. Supports optional filtering by date range. 
      *
      * @param roomId ID of the room to reserve (required)
-     * @param start Filter for reservations starting after this datetime (inclusive, ISO 8601). If not provided, defaults to one month before the current date.  (optional)
-     * @param end Filter for reservations ending before this datetime (inclusive, ISO 8601). If not provided, defaults to one month after the current date.  (optional)
+     * @param startDate Filter for reservations starting after this datetime (inclusive, ISO 8601). If not provided, defaults to one month before the current date.  (optional)
+     * @param endDate Filter for reservations ending before this datetime (inclusive, ISO 8601). If not provided, defaults to one month after the current date.  (optional)
+     * @param page Page number for pagination (starting from 1) (optional, default to 1)
+     * @param pageSize Number of results per page (max 100) (optional, default to 20)
      * @return List of reservations for the room (status code 200)
      *         or Requested resource was not found. (status code 404)
      *         or Unexpected server error. (status code 200)
      */
     @Operation(
-        operationId = "roomsRoomIdReservationsGet",
+        operationId = "listRoomReservations",
         summary = "List reservations for a specific room",
         description = "Returns a list of reservations for the specified room. Supports optional filtering by date range. ",
         tags = { "reservations" },
@@ -316,32 +320,18 @@ public interface RoomsApi {
         produces = { "application/json" }
     )
     
-    default ResponseEntity<Page> roomsRoomIdReservationsGet(
-        @Parameter(name = "room_id", description = "ID of the room to reserve", required = true, in = ParameterIn.PATH) @PathVariable("room_id") Integer roomId,
-        @Parameter(name = "start", description = "Filter for reservations starting after this datetime (inclusive, ISO 8601). If not provided, defaults to one month before the current date. ", in = ParameterIn.QUERY) @Valid @RequestParam(value = "start", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) OffsetDateTime start,
-        @Parameter(name = "end", description = "Filter for reservations ending before this datetime (inclusive, ISO 8601). If not provided, defaults to one month after the current date. ", in = ParameterIn.QUERY) @Valid @RequestParam(value = "end", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) OffsetDateTime end
+    default ResponseEntity<Page> listRoomReservations(
+        @Parameter(name = "room_id", description = "ID of the room to reserve", required = true, in =
+                ParameterIn.PATH) @PathVariable("room_id") Long roomId,
+        @Parameter(name = "startDate", description = "Filter for reservations starting after this datetime (inclusive, ISO 8601). If not provided, defaults to one month before the current date. ", in = ParameterIn.QUERY) @Valid @RequestParam(value = "startDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) OffsetDateTime startDate,
+        @Parameter(name = "endDate", description = "Filter for reservations ending before this datetime (inclusive, ISO 8601). If not provided, defaults to one month after the current date. ", in = ParameterIn.QUERY) @Valid @RequestParam(value = "endDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) OffsetDateTime endDate,
+        @Min(1) @Parameter(name = "page", description = "Page number for pagination (starting from 1)", in = ParameterIn.QUERY) @Valid @RequestParam(value = "page", required = false, defaultValue = "1") Integer page,
+        @Min(1) @Max(100) @Parameter(name = "page_size", description = "Number of results per page (max 100)", in = ParameterIn.QUERY) @Valid @RequestParam(value = "page_size", required = false, defaultValue = "20") Integer pageSize
     ) {
         getRequest().ifPresent(request -> {
-            for (MediaType mediaType: MediaType.parseMediaTypes(request.getHeader("Accept"))) {
-                if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
-                    String exampleString = "{ \"total\" : 120, \"totalPages\" : 6, \"pageSize\" : 20, \"page\" : 1, \"items\" : [ { \"createdAt\" : \"2025-05-24T12:34:56Z\", \"start\" : \"2000-01-23T04:56:07.000+00:00\", \"description\" : \"description\", \"end\" : \"2000-01-23T04:56:07.000+00:00\", \"id\" : 1234, \"roomId\" : 321, \"updatedAt\" : \"2025-05-25T08:00:00Z\", \"status\" : \"active\" }, { \"createdAt\" : \"2025-05-24T12:34:56Z\", \"start\" : \"2000-01-23T04:56:07.000+00:00\", \"description\" : \"description\", \"end\" : \"2000-01-23T04:56:07.000+00:00\", \"id\" : 1234, \"roomId\" : 321, \"updatedAt\" : \"2025-05-25T08:00:00Z\", \"status\" : \"active\" } ] }";
-                    ApiUtil.setExampleResponse(request, "application/json", exampleString);
-                    break;
-                }
-                if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
-                    String exampleString = "{ \"code\" : \"BadRequest\", \"message\" : \"Invalid input provided.\" }";
-                    ApiUtil.setExampleResponse(request, "application/json", exampleString);
-                    break;
-                }
-                if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
-                    String exampleString = "{ \"code\" : \"BadRequest\", \"message\" : \"Invalid input provided.\" }";
-                    ApiUtil.setExampleResponse(request, "application/json", exampleString);
-                    break;
-                }
-            }
+            // ...existing code...
         });
         return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
-
     }
 
 
@@ -350,7 +340,7 @@ public interface RoomsApi {
      * Reserves the specified room for the requested time span.  Returns **409 Conflict** if the time range overlaps an existing reservation. 
      *
      * @param roomId ID of the room to reserve (required)
-     * @param reservation  (required)
+     * @param reservationDto  (required)
      * @return Reservation created successfully (status code 201)
      *         or Invalid input. (status code 400)
      *         or Requested resource was not found. (status code 404)
@@ -358,13 +348,13 @@ public interface RoomsApi {
      *         or Unexpected server error. (status code 200)
      */
     @Operation(
-        operationId = "roomsRoomIdReservationsPost",
+        operationId = "createRoomReservation",
         summary = "Create a reservation",
         description = "Reserves the specified room for the requested time span.  Returns **409 Conflict** if the time range overlaps an existing reservation. ",
         tags = { "reservations" },
         responses = {
             @ApiResponse(responseCode = "201", description = "Reservation created successfully", content = {
-                @Content(mediaType = "application/json", schema = @Schema(implementation = Reservation.class))
+                @Content(mediaType = "application/json", schema = @Schema(implementation = ReservationDto.class))
             }),
             @ApiResponse(responseCode = "400", description = "Invalid input.", content = {
                 @Content(mediaType = "application/json", schema = @Schema(implementation = Error.class))
@@ -387,41 +377,24 @@ public interface RoomsApi {
         consumes = { "application/json" }
     )
     
-    default ResponseEntity<Reservation> roomsRoomIdReservationsPost(
-        @Parameter(name = "room_id", description = "ID of the room to reserve", required = true, in = ParameterIn.PATH) @PathVariable("room_id") Integer roomId,
-        @Parameter(name = "Reservation", description = "", required = true) @Valid @RequestBody Reservation reservation
+    default ResponseEntity<ReservationDto> createRoomReservation(
+            @Parameter(name = "room_id", required = true, in = ParameterIn.PATH)
+            @PathVariable("room_id") Long roomId,
+            @io.swagger.v3.oas.annotations.parameters.RequestBody(
+                    description = "Reservation data",
+                    required = true,
+                    content = @Content(
+                            mediaType = "application/json",
+                            examples = @ExampleObject(
+                                    value = "{\n  \"start\": \"2025-06-15T11:05:32.700Z\",\n  \"end\": \"2025-06-15T14:07:32.700Z\",\n  \"status\": \"active\",\n  \"description\": \"rezerwacja\"\n}"
+                            )
+                    )
+            )
+            @Valid @RequestBody ReservationDto reservationDto
     ) {
         getRequest().ifPresent(request -> {
-            for (MediaType mediaType: MediaType.parseMediaTypes(request.getHeader("Accept"))) {
-                if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
-                    String exampleString = "{ \"createdAt\" : \"2025-05-24T12:34:56Z\", \"start\" : \"2000-01-23T04:56:07.000+00:00\", \"description\" : \"description\", \"end\" : \"2000-01-23T04:56:07.000+00:00\", \"id\" : 1234, \"roomId\" : 321, \"updatedAt\" : \"2025-05-25T08:00:00Z\", \"status\" : \"active\" }";
-                    ApiUtil.setExampleResponse(request, "application/json", exampleString);
-                    break;
-                }
-                if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
-                    String exampleString = "{ \"code\" : \"BadRequest\", \"message\" : \"Invalid input provided.\" }";
-                    ApiUtil.setExampleResponse(request, "application/json", exampleString);
-                    break;
-                }
-                if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
-                    String exampleString = "{ \"code\" : \"BadRequest\", \"message\" : \"Invalid input provided.\" }";
-                    ApiUtil.setExampleResponse(request, "application/json", exampleString);
-                    break;
-                }
-                if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
-                    String exampleString = "{ \"code\" : \"BadRequest\", \"message\" : \"Invalid input provided.\" }";
-                    ApiUtil.setExampleResponse(request, "application/json", exampleString);
-                    break;
-                }
-                if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
-                    String exampleString = "{ \"code\" : \"BadRequest\", \"message\" : \"Invalid input provided.\" }";
-                    ApiUtil.setExampleResponse(request, "application/json", exampleString);
-                    break;
-                }
-            }
         });
         return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
-
     }
 
 
@@ -464,7 +437,8 @@ public interface RoomsApi {
     )
     
     default ResponseEntity<RoomDto> updateRoom(
-        @Parameter(name = "room_id", description = "ID of the room to retrieve or modify", required = true, in = ParameterIn.PATH) @PathVariable("room_id") Integer roomId,
+        @Parameter(name = "room_id", description = "ID of the room to retrieve or modify", required = true, in =
+                ParameterIn.PATH) @PathVariable("room_id") Long roomId,
         @Parameter(name = "UpdateRoomRequest", description = "Room data to update", required = true) @Valid @RequestBody UpdateRoomRequest updateRoomRequest
     ) {
         getRequest().ifPresent(request -> {
@@ -496,3 +470,4 @@ public interface RoomsApi {
     }
 
 }
+

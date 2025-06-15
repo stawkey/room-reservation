@@ -1,4 +1,4 @@
-package org.openapitools.configuration;
+package io.github.stawkey.roomreservation.config;
 
 import io.github.stawkey.roomreservation.dto.ReservationStatus;
 

@@ -18,7 +18,7 @@ import jakarta.annotation.Generated;
  */
 
 @Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-05-30T20:04:03.976488063+02:00[Europe/Warsaw]", comments = "Generator version: 7.12.0")
-public class Reservation {
+public class ReservationDto {
 
   @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
   private @Nullable OffsetDateTime createdAt;
@@ -28,7 +28,7 @@ public class Reservation {
 
   private @Nullable Long id;
 
-  private Integer roomId;
+  private @Nullable Long roomId;
 
   @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
   private OffsetDateTime startDate;
@@ -40,21 +40,21 @@ public class Reservation {
 
   private @Nullable String description;
 
-  public Reservation() {
+  public ReservationDto() {
     super();
   }
 
   /**
    * Constructor with only required parameters
    */
-  public Reservation(Integer roomId, OffsetDateTime startDate, OffsetDateTime endDate, ReservationStatus status) {
+  public ReservationDto(Long roomId, OffsetDateTime startDate, OffsetDateTime endDate, ReservationStatus status) {
     this.roomId = roomId;
     this.startDate = startDate;
     this.endDate = endDate;
     this.status = status;
   }
 
-  public Reservation createdAt(OffsetDateTime createdAt) {
+  public ReservationDto createdAt(OffsetDateTime createdAt) {
     this.createdAt = createdAt;
     return this;
   }
@@ -74,7 +74,7 @@ public class Reservation {
     this.createdAt = createdAt;
   }
 
-  public Reservation updatedAt(OffsetDateTime updatedAt) {
+  public ReservationDto updatedAt(OffsetDateTime updatedAt) {
     this.updatedAt = updatedAt;
     return this;
   }
@@ -94,7 +94,7 @@ public class Reservation {
     this.updatedAt = updatedAt;
   }
 
-  public Reservation id(Long id) {
+  public ReservationDto id(Long id) {
     this.id = id;
     return this;
   }
@@ -114,7 +114,7 @@ public class Reservation {
     this.id = id;
   }
 
-  public Reservation roomId(Integer roomId) {
+  public ReservationDto roomId(Long roomId) {
     this.roomId = roomId;
     return this;
   }
@@ -123,18 +123,17 @@ public class Reservation {
    * ID of the reserved room.
    * @return roomId
    */
-  @NotNull 
   @Schema(name = "roomId", example = "321", description = "ID of the reserved room.", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("roomId")
-  public Integer getRoomId() {
+  public Long getRoomId() {
     return roomId;
   }
 
-  public void setRoomId(Integer roomId) {
+  public void setRoomId(Long roomId) {
     this.roomId = roomId;
   }
 
-  public Reservation start(OffsetDateTime start) {
+  public ReservationDto start(OffsetDateTime start) {
     this.startDate = start;
     return this;
   }
@@ -154,7 +153,7 @@ public class Reservation {
     this.startDate = startDate;
   }
 
-  public Reservation end(OffsetDateTime end) {
+  public ReservationDto end(OffsetDateTime end) {
     this.endDate = end;
     return this;
   }
@@ -174,7 +173,7 @@ public class Reservation {
     this.endDate = endDate;
   }
 
-  public Reservation status(ReservationStatus status) {
+  public ReservationDto status(ReservationStatus status) {
     this.status = status;
     return this;
   }
@@ -194,7 +193,7 @@ public class Reservation {
     this.status = status;
   }
 
-  public Reservation description(String description) {
+  public ReservationDto description(String description) {
     this.description = description;
     return this;
   }
@@ -222,15 +221,15 @@ public class Reservation {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    Reservation reservation = (Reservation) o;
-    return Objects.equals(this.createdAt, reservation.createdAt) &&
-        Objects.equals(this.updatedAt, reservation.updatedAt) &&
-        Objects.equals(this.id, reservation.id) &&
-        Objects.equals(this.roomId, reservation.roomId) &&
-        Objects.equals(this.startDate, reservation.startDate) &&
-        Objects.equals(this.endDate, reservation.endDate) &&
-        Objects.equals(this.status, reservation.status) &&
-        Objects.equals(this.description, reservation.description);
+    ReservationDto reservationDTO = (ReservationDto) o;
+    return Objects.equals(this.createdAt, reservationDTO.createdAt) &&
+        Objects.equals(this.updatedAt, reservationDTO.updatedAt) &&
+        Objects.equals(this.id, reservationDTO.id) &&
+        Objects.equals(this.roomId, reservationDTO.roomId) &&
+        Objects.equals(this.startDate, reservationDTO.startDate) &&
+        Objects.equals(this.endDate, reservationDTO.endDate) &&
+        Objects.equals(this.status, reservationDTO.status) &&
+        Objects.equals(this.description, reservationDTO.description);
   }
 
   @Override

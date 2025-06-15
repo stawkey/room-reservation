@@ -21,7 +21,7 @@ import jakarta.annotation.Generated;
 public class Page {
 
   @Valid
-  private List<@Valid Reservation> items = new ArrayList<>();
+  private List<@Valid ReservationDto> items = new ArrayList<>();
 
   private @Nullable Integer page;
 
@@ -31,12 +31,12 @@ public class Page {
 
   private @Nullable Integer totalPages;
 
-  public Page items(List<@Valid Reservation> items) {
+  public Page items(List<@Valid ReservationDto> items) {
     this.items = items;
     return this;
   }
 
-  public Page addItemsItem(Reservation itemsItem) {
+  public Page addItemsItem(ReservationDto itemsItem) {
     if (this.items == null) {
       this.items = new ArrayList<>();
     }
@@ -51,11 +51,11 @@ public class Page {
   @Valid 
   @Schema(name = "items", description = "List of items on the current page.", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("items")
-  public List<@Valid Reservation> getItems() {
+  public List<@Valid ReservationDto> getItems() {
     return items;
   }
 
-  public void setItems(List<@Valid Reservation> items) {
+  public void setItems(List<@Valid ReservationDto> items) {
     this.items = items;
   }
 

@@ -1,6 +1,8 @@
 package io.github.stawkey.roomreservation.entity;
 
 import jakarta.persistence.*;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.OffsetDateTime;
@@ -8,28 +10,27 @@ import java.time.OffsetDateTime;
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener.class)
 public abstract class Auditable {
-    @Column(name = "created_at", updatable = false)
+    @CreatedDate
+    @Column(name = "created_at", nullable = false, updatable = false)
     private OffsetDateTime createdAt;
 
-    @Column(name = "updated_at")
+    @LastModifiedDate
+    @Column(name = "updated_at", nullable = false)
     private OffsetDateTime updatedAt;
-
-    @PrePersist
-    protected void onCreate() {
-        this.createdAt = OffsetDateTime.now();
-        this.updatedAt = OffsetDateTime.now();
-    }
-
-    @PreUpdate
-    protected void onUpdate() {
-        this.updatedAt = OffsetDateTime.now();
-    }
 
     public OffsetDateTime getCreatedAt() {
         return createdAt;
     }
 
+    public void setCreatedAt(OffsetDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
+
     public OffsetDateTime getUpdatedAt() {
         return updatedAt;
+    }
+
+    public void setUpdatedAt(OffsetDateTime updatedAt) {
+        this.updatedAt = updatedAt;
     }
 }

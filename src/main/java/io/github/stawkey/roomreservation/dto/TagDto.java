@@ -8,16 +8,14 @@ import jakarta.validation.constraints.NotNull;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.OffsetDateTime;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
 
 /**
- * Room
+ * Tag
  */
 
 @Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2025-06-14T13:51:09.501262900+02:00[Europe/Warsaw]", comments = "Generator version: 7.7.0")
-public class RoomDto {
+public class TagDto {
 
   @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
   private OffsetDateTime createdAt;
@@ -25,30 +23,24 @@ public class RoomDto {
   @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
   private OffsetDateTime updatedAt;
 
-  private Long id;
+  private Integer id;
 
   private String name;
 
-  private Integer capacity;
-
   private String description;
 
-  @Valid
-  private List<@Valid TagDto> tagDtos = new ArrayList<>();
-
-  public RoomDto() {
+  public TagDto() {
     super();
   }
 
   /**
    * Constructor with only required parameters
    */
-  public RoomDto(String name, Integer capacity) {
+  public TagDto(String name) {
     this.name = name;
-    this.capacity = capacity;
   }
 
-  public RoomDto createdAt(OffsetDateTime createdAt) {
+  public TagDto createdAt(OffsetDateTime createdAt) {
     this.createdAt = createdAt;
     return this;
   }
@@ -68,7 +60,7 @@ public class RoomDto {
     this.createdAt = createdAt;
   }
 
-  public RoomDto updatedAt(OffsetDateTime updatedAt) {
+  public TagDto updatedAt(OffsetDateTime updatedAt) {
     this.updatedAt = updatedAt;
     return this;
   }
@@ -88,37 +80,37 @@ public class RoomDto {
     this.updatedAt = updatedAt;
   }
 
-  public RoomDto id(Long id) {
+  public TagDto id(Integer id) {
     this.id = id;
     return this;
   }
 
   /**
-   * Unique identifier of the room.
+   * Unique identifier of the tag.
    * @return id
    */
   
-  @Schema(name = "id", example = "321", description = "Unique identifier of the room.", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "id", example = "1", description = "Unique identifier of the tag.", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("id")
-  public Long getId() {
+  public Integer getId() {
     return id;
   }
 
-  public void setId(Long id) {
+  public void setId(Integer id) {
     this.id = id;
   }
 
-  public RoomDto name(String name) {
+  public TagDto name(String name) {
     this.name = name;
     return this;
   }
 
   /**
-   * Name of the room.
+   * Name of the tag.
    * @return name
    */
   @NotNull 
-  @Schema(name = "name", example = "Conference Room A", description = "Name of the room.", requiredMode = Schema.RequiredMode.REQUIRED)
+  @Schema(name = "name", example = "projector", description = "Name of the tag.", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("name")
   public String getName() {
     return name;
@@ -128,37 +120,17 @@ public class RoomDto {
     this.name = name;
   }
 
-  public RoomDto capacity(Integer capacity) {
-    this.capacity = capacity;
-    return this;
-  }
-
-  /**
-   * Maximum capacity of the room.
-   * @return capacity
-   */
-  @NotNull 
-  @Schema(name = "capacity", example = "20", description = "Maximum capacity of the room.", requiredMode = Schema.RequiredMode.REQUIRED)
-  @JsonProperty("capacity")
-  public Integer getCapacity() {
-    return capacity;
-  }
-
-  public void setCapacity(Integer capacity) {
-    this.capacity = capacity;
-  }
-
-  public RoomDto description(String description) {
+  public TagDto description(String description) {
     this.description = description;
     return this;
   }
 
   /**
-   * Additional information or features of the room.
+   * Optional description of what the tag represents.
    * @return description
    */
   
-  @Schema(name = "description", example = "Room equipped with projector and whiteboard.", description = "Additional information or features of the room.", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @Schema(name = "description", example = "Room has a projector available", description = "Optional description of what the tag represents.", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
   @JsonProperty("description")
   public String getDescription() {
     return description;
@@ -166,34 +138,6 @@ public class RoomDto {
 
   public void setDescription(String description) {
     this.description = description;
-  }
-
-  public RoomDto tags(List<@Valid TagDto> tagDtos) {
-    this.tagDtos = tagDtos;
-    return this;
-  }
-
-  public RoomDto addTagsItem(TagDto tagsItem) {
-    if (this.tagDtos == null) {
-      this.tagDtos = new ArrayList<>();
-    }
-    this.tagDtos.add(tagsItem);
-    return this;
-  }
-
-  /**
-   * Tags associated with the room.
-   * @return tags
-   */
-  @Valid 
-  @Schema(name = "tags", description = "Tags associated with the room.", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
-  @JsonProperty("tags")
-  public List<@Valid TagDto> getTags() {
-    return tagDtos;
-  }
-
-  public void setTags(List<@Valid TagDto> tagDtos) {
-    this.tagDtos = tagDtos;
   }
 
   @Override
@@ -204,32 +148,28 @@ public class RoomDto {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    RoomDto roomDTO = (RoomDto) o;
-    return Objects.equals(this.createdAt, roomDTO.createdAt) &&
-        Objects.equals(this.updatedAt, roomDTO.updatedAt) &&
-        Objects.equals(this.id, roomDTO.id) &&
-        Objects.equals(this.name, roomDTO.name) &&
-        Objects.equals(this.capacity, roomDTO.capacity) &&
-        Objects.equals(this.description, roomDTO.description) &&
-        Objects.equals(this.tagDtos, roomDTO.tagDtos);
+    TagDto tagDTO = (TagDto) o;
+    return Objects.equals(this.createdAt, tagDTO.createdAt) &&
+        Objects.equals(this.updatedAt, tagDTO.updatedAt) &&
+        Objects.equals(this.id, tagDTO.id) &&
+        Objects.equals(this.name, tagDTO.name) &&
+        Objects.equals(this.description, tagDTO.description);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(createdAt, updatedAt, id, name, capacity, description, tagDtos);
+    return Objects.hash(createdAt, updatedAt, id, name, description);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class Room {\n");
+    sb.append("class Tag {\n");
     sb.append("    createdAt: ").append(toIndentedString(createdAt)).append("\n");
     sb.append("    updatedAt: ").append(toIndentedString(updatedAt)).append("\n");
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
     sb.append("    name: ").append(toIndentedString(name)).append("\n");
-    sb.append("    capacity: ").append(toIndentedString(capacity)).append("\n");
     sb.append("    description: ").append(toIndentedString(description)).append("\n");
-    sb.append("    tags: ").append(toIndentedString(tagDtos)).append("\n");
     sb.append("}");
     return sb.toString();
   }

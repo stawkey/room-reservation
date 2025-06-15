@@ -12,10 +12,16 @@ import org.springframework.context.annotation.FullyQualifiedAnnotationBeanNameGe
     nameGenerator = FullyQualifiedAnnotationBeanNameGenerator.class
 )
 @ComponentScan(
-    basePackages = {"org.openapitools", "io.github.stawkey.roomreservation.api",
-            "io.github.stawkey.roomreservation.controller" , "org.openapitools.configuration", "io.github.stawkey" +
-            ".roomreservation.entity", "io.github.stawkey.roomreservation.repository", "io.github.stawkey.roomreservation.mapper",
-            "io.github.stawkey.roomreservation.service"},
+    basePackages = {
+            "org.openapitools",
+            "io.github.stawkey.roomreservation.api",
+            "io.github.stawkey.roomreservation.controller",
+            "io.github.stawkey.roomreservation.config",
+            "io.github.stawkey.roomreservation.entity",
+            "io.github.stawkey.roomreservation.repository",
+            "io.github.stawkey.roomreservation.mapper",
+            "io.github.stawkey.roomreservation.service"
+    },
     nameGenerator = FullyQualifiedAnnotationBeanNameGenerator.class
 )
 public class OpenApiGeneratorApplication {
