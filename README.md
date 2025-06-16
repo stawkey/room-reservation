@@ -51,9 +51,15 @@ git clone https://github.com/stawkey/room-reservation
 cd room-reservation/backend
 ```
 
-2. Run OpenApiGeneratorApplication.java
+2. Make sure Docker is running. Run the database with:
 
-3. You can navigate to `http://localhost:8080` in your browser to access OpenAPI documentation.
+```
+docker-compose up
+```
+
+3. Run OpenApiGeneratorApplication.java
+
+4. You can navigate to `http://localhost:8080` in your browser to access OpenAPI documentation.
 
 #Frontend
 
