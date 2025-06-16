@@ -26,7 +26,7 @@ import {
     TableSortLabel,
     Grid,
 } from "@mui/material";
-import { Add, Delete } from "@mui/icons-material";
+import { Add, Delete, Close } from "@mui/icons-material";
 import { reservationsApi, roomsApi } from "../services/api";
 import { LocalizationProvider, DatePicker, DateTimePicker } from "@mui/x-date-pickers";
 import { renderTimeViewClock } from "@mui/x-date-pickers/timeViewRenderers";
@@ -461,7 +461,7 @@ function ReservationsPage() {
                                                 title="Cancel Reservation"
                                                 color="error"
                                             >
-                                                <Delete />
+                                                <Close />
                                             </IconButton>
                                         )}
                                     </TableCell>
