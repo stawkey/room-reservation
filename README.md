@@ -1,6 +1,15 @@
 # Room Reservation System Frontend
 
-A simple React frontend application for a room reservation system built with Material-UI.
+## Introduction
+
+A simple backend system with implemented frontend. 
+It is a universal room booking system that supports the possibility of reserving specific rooms and assigning individual tags to them.
+
+## Authors
+
+[Stanisław Strojniak](https://github.com/stawkey)
+
+[Wiktor Kostka](https://github.com/Mekost)
 
 ## Features
 
@@ -11,7 +20,17 @@ A simple React frontend application for a room reservation system built with Mat
 
 ## Technologies Used
 
--   React 18 with JavaScript
+### Backend
+
+- Database: PostgreSQL
+- ORM: Hibernate + Java for mapping Java classes to database tables without writing SQL queries
+- Spring Boot for configurating HTTP server, creating REST API and integrating with database
+- Swagger for testing and documenting API
+- OpenAPI Codegen - for generating backend basics basing on .yaml configuration
+
+### Frontend
+
+-   React 18 with JavaScript for creating UI and interactions with backend
 -   Material-UI for components and styling
 -   Axios for API communication
 -   Vite for build tooling
@@ -42,6 +61,5 @@ The proxy automatically forwards all `/api` requests from the frontend to `http:
 
 ## Project Structure
 
--   `src/components/` - React components for each page
--   `src/services/` - API service layer for backend communication
--   `src/App.jsx` - Main application component with navigation
+- `backend` - contains all backend logic
+- `frontend` - contains implementation of UI for project
