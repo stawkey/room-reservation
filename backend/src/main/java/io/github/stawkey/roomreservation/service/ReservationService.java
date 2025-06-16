@@ -259,4 +259,19 @@ public class ReservationService {
             return builder.and(basePredicate, additionalPredicate);
         };
     }
+
+    public Result<Boolean> cancelReservationsForRoom(Long roomId) {
+        try {
+            List<Reservation> reservations = reservationRepository.findAllByRoomId(roomId);
+            for (Reservation reservation : reservations) {
+                reservation.setCancelled(true);
+            }
+            reservationRepository.saveAll(reservations);
+            log.info("Canceled {} reservations for room ID: {}", reservations.size(), roomId);
+            return Result.success(true);
+        } catch (Exception e) {
+            log.error("Failed to cancel reservations for room ID: {}", roomId, e);
+            return Result.failure("Failed to cancel reservations: " + e.getMessage());
+        }
+    }
 }

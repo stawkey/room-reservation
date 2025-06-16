@@ -158,14 +158,18 @@ public class RoomsApiController implements RoomsApi {
     @Override
     public ResponseEntity<Void> deleteRoom(
             @Parameter(name = "room_id", required = true, in = ParameterIn.PATH)
-            @PathVariable("room_id")
-            Long roomId) {
+            @PathVariable("room_id") Long roomId) {
         log.info("API request: Delete room with ID: {}", roomId);
-        
+
+        Result<Boolean> cancelResult = reservationService.cancelReservationsForRoom(roomId);
+        if (cancelResult.isFailure()) {
+            log.error("Error canceling reservations for room ID: {}: {}", roomId, cancelResult.getError());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+
         Result<Boolean> result = roomService.deleteRoom(roomId);
-        
         if (result.isSuccess() && result.getValue()) {
-            log.info("Room deleted successfully with ID: {}", roomId);
+            log.info("Room and its reservations deleted successfully with ID: {}", roomId);
             return ResponseEntity.noContent().build();
         } else if (result.isSuccess()) {
             log.warn("Room not found for deletion with ID: {}", roomId);
