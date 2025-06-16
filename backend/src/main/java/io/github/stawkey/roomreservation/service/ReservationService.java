@@ -264,7 +264,7 @@ public class ReservationService {
         try {
             List<Reservation> reservations = reservationRepository.findAllByRoomId(roomId);
             for (Reservation reservation : reservations) {
-                reservation.setCancelled(true);
+                reservation.setStatus(ReservationStatus.CANCELLED);
             }
             reservationRepository.saveAll(reservations);
             log.info("Canceled {} reservations for room ID: {}", reservations.size(), roomId);
