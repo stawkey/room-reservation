@@ -37,13 +37,34 @@ It is a universal room booking system that supports the possibility of reserving
 
 ## Getting Started
 
-1. Install dependencies:
+Clone the repository
 
 ```bash
+git clone https://github.com/stawkey/room-reservation
+```
+
+# Backend
+
+1. Go to the backend folder:
+
+```bash
+cd room-reservation/backend
+```
+
+2. Run OpenApiGeneratorApplication.java
+
+3. You can navigate to `http://localhost:8080` in your browser to access OpenAPI documentation.
+
+#Frontend
+
+1. Go to the frontend folder and install dependencies:
+
+```bash
+cd room-reservation/frontend
 npm install
 ```
 
-2. Start the development server:
+2. Start frontend development server:
 
 ```bash
 npm run dev
