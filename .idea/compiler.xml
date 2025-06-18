@@ -6,13 +6,17 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="room-reservation" />
+        <module name="roomDto-reservationDTO" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="room-reservation" target="17" />
+    </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
       <module name="room-reservation" options="-parameters" />
+      <module name="roomDto-reservationDTO" options="-parameters" />
     </option>
   </component>
 </project>
